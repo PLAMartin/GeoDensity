@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GeoDensity | Understand Where Demand Is Concentrated</title>
+  <meta name="description" content="GeoDensity helps teams understand where people, demand, opportunities and services are concentrated so they can make better location-based decisions." />
+  <style>
+    :root {
+      --bg: #f6f8f4;
+      --card: #ffffff;
+      --text: #16231d;
+      --muted: #5e6f67;
+      --accent: #2f7d5b;
+      --accent-dark: #225c43;
+      --soft: #e5f0ea;
+      --border: #d9e4dd;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 28px 7vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-link {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .hero {
+      padding: 72px 7vw 56px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 14px;
+      background: var(--soft);
+      color: var(--accent-dark);
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 5vw, 4.8rem);
+      line-height: 1.02;
+      letter-spacing: -0.07em;
+      margin: 0 0 24px;
+    }
+
+    .hero p {
+      font-size: 1.22rem;
+      color: var(--muted);
+      max-width: 650px;
+      margin-bottom: 30px;
+    }
+
+    .waitlist-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 24px 80px rgba(22, 35, 29, 0.08);
+    }
+
+    .waitlist-card h2 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      letter-spacing: -0.03em;
+    }
+
+    form {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    input[type="email"] {
+      flex: 1;
+      padding: 15px 16px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input[type="email"]:focus {
+      border-color: var(--accent);
+    }
+
+    button {
+      border: 0;
+      background: var(--accent);
+      color: white;
+      font-weight: 800;
+      padding: 15px 20px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background: var(--accent-dark);
+    }
+
+    .note {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    .map-card {
+      background: linear-gradient(135deg, #dcebe3, #ffffff);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      min-height: 430px;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .map-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 42px 42px;
+      opacity: 0.5;
+    }
+
+    .density-point {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(47, 125, 91, 0.25);
+      border: 2px solid rgba(47, 125, 91, 0.45);
+    }
+
+    .p1 { width: 180px; height: 180px; top: 70px; left: 70px; }
+    .p2 { width: 110px; height: 110px; top: 190px; right: 85px; }
+    .p3 { width: 75px; height: 75px; bottom: 55px; left: 190px; }
+
+    .map-label {
+      position: relative;
+      z-index: 2;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+      max-width: 270px;
+      box-shadow: 0 12px 40px rgba(22, 35, 29, 0.08);
+    }
+
+    .map-label strong {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    section {
+      padding: 64px 7vw;
+    }
+
+    .section-title {
+      max-width: 760px;
+      margin-bottom: 34px;
+    }
+
+    .section-title h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+      margin: 0 0 14px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 26px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      letter-spacing: -0.03em;
+    }
+
+    .card p {
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      counter-reset: step;
+    }
+
+    .step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      position: relative;
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      display: inline-grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--soft);
+      color: var(--accent-dark);
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .step h3 {
+      margin: 0 0 8px;
+    }
+
+    .step p {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .cta {
+      background: var(--text);
+      color: white;
+      border-radius: 36px;
+      margin: 64px 7vw;
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1fr 0.9fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .cta p {
+      color: rgba(255,255,255,0.76);
+    }
+
+    .cta .waitlist-card {
+      box-shadow: none;
+    }
+
+    footer {
+      padding: 30px 7vw 48px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 900px) {
+      header {
+        padding: 22px 5vw;
+      }
+
+      .hero,
+      .cta {
+        grid-template-columns: 1fr;
+      }
+
+      .hero,
+      section {
+        padding-left: 5vw;
+        padding-right: 5vw;
+      }
+
+      .grid,
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      form {
+        flex-direction: column;
+      }
+
+      .cta {
+        margin-left: 5vw;
+        margin-right: 5vw;
+        padding: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Geo<span>Density</span></div>
+    <a class="nav-link" href="#waitlist">Join waitlist</a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="eyebrow">Location intelligence made clearer</span>
+        <h1>See where demand, people and opportunity are concentrated.</h1>
+        <p>
+          GeoDensity helps teams make better location-based decisions by turning messy geographic data into clear density insights.
+          Understand where activity is clustered, where gaps exist and where action is most likely to matter.
+        </p>
+
+        <div class="waitlist-card" id="waitlist">
+          <h2>Join the GeoDensity waitlist</h2>
+          <p>Be first to hear when early access opens.</p>
+          <form action="https://formsubmit.co/incyapp@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="New GeoDensity Waitlist Signup">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="email" name="email" placeholder="Enter your email address" required />
+            <button type="submit">Join waitlist</button>
+          </form>
+          <p class="note">No spam. Just product updates and early access invitations.</p>
+        </div>
+      </div>
+
+      <div class="map-card" aria-label="Abstract density map illustration">
+        <div class="map-grid"></div>
+        <div class="density-point p1"></div>
+        <div class="density-point p2"></div>
+        <div class="density-point p3"></div>
+        <div class="map-label">
+          <strong>High-density opportunity zone</strong>
+          <span>Identify where interest, need or activity is strongest.</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>The problem GeoDensity solves</h2>
+        <p>
+          Many decisions depend on location, but the underlying data is often fragmented, difficult to compare and hard to turn into action.
+        </p>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Too much scattered data</h3>
+          <p>Population, demand, customers, services and local signals often live in separate tools, spreadsheets or maps.</p>
+        </div>
+        <div class="card">
+          <h3>Hard to spot patterns</h3>
+          <p>Important clusters, underserved areas and emerging hotspots can be missed when data is viewed in isolation.</p>
+        </div>
+        <div class="card">
+          <h3>Slow decisions</h3>
+          <p>Teams waste time debating where to focus instead of using clear evidence to guide their next move.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>How GeoDensity solves it</h2>
+        <p>
+          GeoDensity combines geographic data, density mapping and simple visual analysis to show where attention should be focused.
+        </p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <h3>Collect</h3>
+          <p>Bring together location-based data from your chosen sources.</p>
+        </div>
+        <div class="step">
+          <h3>Map</h3>
+          <p>Visualise data geographically so patterns become easier to see.</p>
+        </div>
+        <div class="step">
+          <h3>Compare</h3>
+          <p>Identify dense clusters, gaps, overlaps and priority areas.</p>
+        </div>
+        <div class="step">
+          <h3>Act</h3>
+          <p>Use the insight to decide where to open, invest, serve, sell or investigate.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <h2>Who GeoDensity is for</h2>
+        <p>
+          GeoDensity is for people and organisations that need to understand where things are happening — and where they are not.
+        </p>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Founders and startups</h3>
+          <p>Find promising launch areas, understand local demand and prioritise expansion.</p>
+        </div>
+        <div class="card">
+          <h3>Property and retail teams</h3>
+          <p>Assess location potential, catchment strength and nearby opportunity.</p>
+        </div>
+        <div class="card">
+          <h3>Public services and charities</h3>
+          <p>See where need is concentrated and where service coverage may be missing.</p>
+        </div>
+        <div class="card">
+          <h3>Marketing teams</h3>
+          <p>Target campaigns around geographic clusters of likely customers or interest.</p>
+        </div>
+        <div class="card">
+          <h3>Researchers and analysts</h3>
+          <p>Turn local data into maps, patterns and evidence-led recommendations.</p>
+        </div>
+        <div class="card">
+          <h3>Operations teams</h3>
+          <p>Plan routes, coverage, staffing and resource allocation using location insight.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div>
+        <h2>Make better decisions by seeing the geography behind the data.</h2>
+        <p>
+          Join the waitlist to follow GeoDensity as it develops and get early access when the first version is ready.
+        </p>
+      </div>
+
+      <div class="waitlist-card">
+        <h2>Register your interest</h2>
+        <form action="https://formsubmit.co/incyapp@gmail.com" method="POST">
+            <input type="hidden" name="_subject" value="New GeoDensity Waitlist Signup">
+            <input type="hidden" name="_captcha" value="false">
+          <input type="email" name="email" placeholder="Your email address" required />
+          <button type="submit">Join waitlist</button>
+        </form>
+        <p class="note">Replace the form action with your email platform, Airtable, ConvertKit, Mailchimp or custom backend endpoint.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2026 GeoDensity. All rights reserved.
+  </footer>
+</body>
+</html>
