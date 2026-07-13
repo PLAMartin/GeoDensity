@@ -35,18 +35,6 @@ async function insertWithDevFallback(
 }
 // END DEV-ONLY FALLBACK
 
-function buildNote(entry: InsertWaitlistEntryInput): string | null {
-  const parts = [
-    entry.utmSource ? `utm_source=${entry.utmSource}` : null,
-    entry.utmMedium ? `utm_medium=${entry.utmMedium}` : null,
-    entry.utmCampaign ? `utm_campaign=${entry.utmCampaign}` : null,
-    entry.referrer ? `referrer=${entry.referrer}` : null,
-    entry.userAgent ? `user_agent=${entry.userAgent}` : null,
-  ].filter((part): part is string => Boolean(part));
-
-  return parts.length > 0 ? parts.join("; ") : null;
-}
-
 export async function insertWaitlistEntry(
   entry: InsertWaitlistEntryInput
 ): Promise<InsertWaitlistResult> {
@@ -93,8 +81,8 @@ export async function insertWaitlistEntry(
     privacy_policy_url: siteUrl ? `${siteUrl}/privacy` : "/privacy",
     consent_terms: true,
     terms_version: CONSENT_VERSION,
+    terms_url: siteUrl ? `${siteUrl}/terms` : "/terms",
     consent_timestamp: consentTimestamp,
-    note: buildNote(entry),
   });
 
   if (insertError) {
