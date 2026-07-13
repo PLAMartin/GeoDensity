@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f5f2;
+  --surface: #fcfbf9;
+  --surface-border: #e7e2da;
+  --ink: #0f1b33;
+  --ink-secondary: #33415c;
+  --accent: #0c7c82;
+  --accent-hover: #095f65;
+
+  --density-1: #fdecc8;
+  --density-2: #fbcb84;
+  --density-3: #f49b4c;
+  --density-4: #e35d3a;
+  --density-5: #b0243a;
+
+  --shadow-card: 0 2px 12px rgba(15, 27, 51, 0.06);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-border: var(--surface-border);
+  --color-ink: var(--ink);
+  --color-ink-secondary: var(--ink-secondary);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+
+  --color-density-1: var(--density-1);
+  --color-density-2: var(--density-2);
+  --color-density-3: var(--density-3);
+  --color-density-4: var(--density-4);
+  --color-density-5: var(--density-5);
+
+  --shadow-card: var(--shadow-card);
+  --font-sans: var(--font-inter);
+}
+
+body {
+  background: var(--background);
+  color: var(--ink-secondary);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+.numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--accent);
+  border-radius: 4px;
+}
+
+@keyframes heatmap-glow-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.heatmap-glow-enter {
+  transform-origin: 600px 400px;
+  animation: heatmap-glow-enter 700ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
