@@ -7,6 +7,9 @@ export default function Footer() {
           <a href="/privacy" className="hover:text-ink">
             Privacy Notice
           </a>
+          <a href="/terms" className="hover:text-ink">
+            Terms of Use
+          </a>
           <a href="#hero-waitlist" className="hover:text-ink">
             Join the waitlist
           </a>
